@@ -9,6 +9,10 @@ in a SOC-style environment.
 </p>
 
 <hr>
+<ul>
+  <li><a href="https://github.com/e-katerinenko/suricata/edit/main/README.md#installation-and-configuration">Installation and Setup</a></li>
+  <li><a href="https://github.com/e-katerinenko/suricata/edit/main/README.md#suricata-configuration-file">Configuration</a></li>
+</ul>
 
 <h2>Lab Environment</h2>
 <ul>
@@ -217,3 +221,139 @@ Typical log files include:
 <img width="1516" height="82" alt="4 log files" src="https://github.com/user-attachments/assets/d7871526-a0cb-4c96-ba38-8b55a7d439a8" />
 
 <hr>
+
+<h2>Suricata Configuration File</h2>
+
+<p>
+Suricata configuration is controlled through the main YAML file:
+</p>
+
+<pre>
+/etc/suricata/suricata.yaml
+</pre>
+
+<p>
+While most parameters can remain at their default values,
+<strong>network variables and output configuration</strong>
+should be reviewed and adjusted to match the monitored environment.
+It is trongly recommended to backup the yaml file before making changes!
+</p>
+
+<hr>
+
+<h3>Step 1: Define the Home Network</h3>
+
+<p>
+The <strong>HOME_NET</strong> variable defines which networks Suricata
+should treat as internal and protect. Alerts are generated based on
+traffic entering or leaving this network.
+</p>
+<img width="1409" height="1173" alt="Screenshot 2026-01-16 203920" src="https://github.com/user-attachments/assets/4e37b1dd-d18e-4696-b045-e444202bc6ca" />
+
+
+<p>
+Correctly defining <code>HOME_NET</code> is critical to avoid false positives
+and ensure accurate detection logic.
+</p>
+
+<hr>
+
+<h3>Step 2: Outputs — Statistics (<code>stats</code>)</h3>
+
+<p>
+Statistics output provides visibility into Suricata performance and activity,
+including:
+</p>
+
+<ul>
+  <li>Packet counters</li>
+  <li>Decoder statistics</li>
+  <li>Memory usage</li>
+  <li>Flow and stream metrics</li>
+</ul>
+
+<p>
+Statistics are enabled by default and written to:
+</p>
+
+<pre>
+/var/log/suricata/stats.log
+</pre>
+
+<p>
+They are also included in the EVE JSON output under the
+<code>stats</code> record type.
+</p>
+
+<p>
+Statistics are written at regular intervals.
+Setting the interval below <strong>4 seconds</strong> is not recommended
+due to performance impact.
+</p>
+<img width="1624" height="933" alt="Screenshot 2026-01-16 204203" src="https://github.com/user-attachments/assets/c8b3cd85-3df5-49bd-b601-3007227f31fc" />
+
+<hr>
+
+<h3>Step 3: Outputs — Fast Log (<code>fast.log</code>)</h3>
+
+<p>
+The fast output provides a <strong>single-line, human-readable alert format</strong>.
+This log is useful for quick alert review and troubleshooting.
+</p>
+
+<p>
+Typical log file:
+</p>
+
+<pre>
+/var/log/suricata/fast.log
+</pre>
+
+<p>
+Each entry contains essential alert information such as timestamp,
+signature name, source and destination IPs, and ports.
+</p>
+<img width="1588" height="326" alt="2 2  Config outputs fast" src="https://github.com/user-attachments/assets/3cef5cc9-60db-40a9-b101-eb214c77b73f" />
+
+<hr>
+
+<h3>Step 4: Outputs — EVE JSON (<code>eve.json</code>)</h3>
+
+<p>
+The EVE output is Suricata’s primary structured logging format.
+It records alerts, flows, statistics, and protocol metadata in JSON format.
+</p>
+
+<p>
+Key advantages:
+</p>
+
+<ul>
+  <li>Machine-readable JSON structure</li>
+  <li>Easy integration with SIEM and ELK stack</li>
+  <li>Supports advanced filtering and enrichment</li>
+</ul>
+
+<p>
+Typical log file:
+</p>
+
+<pre>
+/var/log/suricata/eve.json
+</pre>
+
+<p>
+EVE output supports extensive customization, including selective event types
+and protocol metadata.
+</p>
+
+<p>
+Advanced configuration options are documented here:
+</p>
+
+<p>
+<a href="https://docs.suricata.io/en/suricata-8.0.2/output/eve/eve-json-output.html#eve-json-output" target="_blank">
+Suricata EVE JSON Output Documentation
+</a>
+</p>
+<img width="1438" height="1088" alt="2 2  Config outputs eve" src="https://github.com/user-attachments/assets/bd9f6283-f3b9-41e1-b848-7c4107b05230" />
