@@ -10,8 +10,8 @@ in a SOC-style environment.
 
 <hr>
 <ul>
-  <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#installation-and-configuration">Installation and Setup</a></li>
-  <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#suricata-configuration-file">Configuration</a></li>
+  <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#installation-and-configuration">Installation</a></li>
+  <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#suricata-configuration-file">Configuration file</a></li>
 </ul>
 
 <h2>Lab Environment</h2>
