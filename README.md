@@ -12,6 +12,7 @@ in a SOC-style environment.
 <ul>
   <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#installation-and-configuration">Installation</a></li>
   <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#suricata-configuration-file">Configuration file</a></li>
+  <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#custom-rules-testing">Custom Rules Testing</a></li>
 </ul>
 
 <h2>Lab Environment</h2>
@@ -357,3 +358,119 @@ Suricata EVE JSON Output Documentation
 </a>
 </p>
 <img width="1438" height="1088" alt="2 2  Config outputs eve" src="https://github.com/user-attachments/assets/bd9f6283-f3b9-41e1-b848-7c4107b05230" />
+
+
+<hr>
+
+<h2>Custom Rules Testing</h2>
+
+<p>
+This section demonstrates how to create, enable, and validate
+<strong>custom Suricata detection rules</strong>.
+Custom rules are commonly used to test IDS functionality,
+detect internal activity, or implement organization-specific detections.
+</p>
+
+<hr>
+
+<h3>Step 1: Create Local Rules File</h3>
+
+<p>
+Create or edit the local rules file:
+</p>
+
+<pre>
+sudo nano /var/lib/suricata/rules/local.rules
+</pre>
+
+<hr>
+
+<h3>Step 2: Add a Test Rule</h3>
+
+<p>
+Add a simple ICMP alert rule to validate detection:
+</p>
+
+<pre>
+alert icmp any any -> any any (msg:"ICMP TEST ALERT"; sid:1000001; rev:1;)
+</pre>
+
+<p>
+This rule triggers an alert whenever ICMP traffic is observed.
+</p>
+
+<hr>
+
+<h3>Step 3: Verify Rule Inclusion</h3>
+
+<p>
+Ensure the local rules file is referenced in the Suricata configuration:
+</p>
+
+<pre>
+grep -n "local.rules" /etc/suricata/suricata.yaml
+</pre>
+
+<p>
+Under the <code>rule-files</code> section, the following entry must exist:
+</p>
+
+<pre>
+- local.rules
+</pre>
+
+<p>
+If it is missing, add it manually to the configuration file.
+</p>
+
+<hr>
+
+<h3>Step 4: Test Suricata Configuration</h3>
+
+<pre>
+sudo suricata -T -c /etc/suricata/suricata.yaml
+</pre>
+
+<p>
+Successful validation confirms that the custom rule syntax is correct.
+</p>
+
+<hr>
+
+<h3>Step 5: Restart Suricata</h3>
+
+<pre>
+sudo systemctl restart suricata
+</pre>
+
+<hr>
+
+<h3>Step 6: Monitor Alerts in EVE JSON</h3>
+
+<p>
+Monitor Suricata alerts in real time using <code>jq</code>:
+</p>
+
+<pre>
+sudo tail -f /var/log/suricata/eve.json | jq -R 'fromjson? | select(.event_type=="alert")'
+</pre>
+
+<p>
+This command extracts only alert events from the EVE JSON stream.
+</p>
+
+<hr>
+
+<h3>Step 7: Generate ICMP Traffic</h3>
+
+<p>
+From another machine on the network, generate ICMP traffic
+(e.g., by using <code>ping</code>) to trigger the custom alert.
+</p>
+
+<p>
+Verify that the alert appears in <code>eve.json</code>
+with the message <strong>"ICMP TEST ALERT"</strong>.
+</p>
+<img width="1570" height="1168" alt="5 Test custom alert" src="https://github.com/user-attachments/assets/9d2024c4-9544-4e60-a55e-e240712e25ed" />
+
