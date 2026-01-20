@@ -13,6 +13,7 @@ in a SOC-style environment.
   <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#installation-and-configuration">Installation</a></li>
   <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#suricata-configuration-file">Configuration file</a></li>
   <li><a href="https://github.com/e-katerinenko/suricata/blob/main/README.md#custom-rules-testing">Custom Rules Testing</a></li>
+  
 </ul>
 
 <h2>Lab Environment</h2>
